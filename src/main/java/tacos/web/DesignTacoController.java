@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
+import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tacos.Ingredient;
@@ -60,8 +61,10 @@ public class DesignTacoController {
   }
 
   @PostMapping
-  public String processTaco(@ModelAttribute("taco") Taco taco,
-      @RequestParam(value = "ingredients", required = false) String[] ingredientIds) {
+  public String processTaco(@ModelAttribute("taco") Taco taco, BindingResult errors,
+      @RequestParam(value = "ingredients", required = false) String[] ingredientIds,
+      Model model) {
+    // 先转换 ingredients，设置到 taco 对象中
     if (ingredientIds != null && ingredientIds.length > 0) {
       List<Ingredient> ingredients = Arrays.stream(ingredientIds)
           .map(id -> {
@@ -74,6 +77,23 @@ public class DesignTacoController {
           .collect(Collectors.toList());
 
       taco.setIngredients(ingredients);
+    }
+    
+    // 手动验证
+    if (taco.getName() == null || taco.getName().length() < 5) {
+      errors.rejectValue("name", "name.size", "Name must be at least 5 characters long");
+    }
+    if (taco.getIngredients() == null || taco.getIngredients().isEmpty()) {
+      errors.rejectValue("ingredients", "ingredients.size", "You must choose at least 1 ingredient");
+    }
+    
+    if (errors.hasErrors()) {
+      System.out.println("Name: " + taco.getName());
+      System.out.println("Ingredients: " + taco.getIngredients());
+      System.out.println("Errors: " + errors.toString());
+      // 重新添加配料列表到模型中，以便页面正常显示
+      addIngredientsToModel(model);
+      return "design";
     }
 
     // Save the taco...
