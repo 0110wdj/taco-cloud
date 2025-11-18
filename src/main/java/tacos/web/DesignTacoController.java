@@ -3,6 +3,8 @@ package tacos.web;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Taco;
+import tacos.data.IngredientRepository;
 
 @Controller
 @RequestMapping("/design")
@@ -27,6 +30,14 @@ import tacos.Taco;
 public class DesignTacoController {
 
   private static final Logger log = LoggerFactory.getLogger(DesignTacoController.class);
+
+  private final IngredientRepository ingredientRepo;
+
+  @Autowired
+  public DesignTacoController(
+      IngredientRepository ingredientRepo) {
+    this.ingredientRepo = ingredientRepo;
+  }
 
   private List<Ingredient> allIngredients = Arrays.asList(
       new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
@@ -42,10 +53,11 @@ public class DesignTacoController {
 
   @ModelAttribute
   public void addIngredientsToModel(Model model) {
+    Iterable<Ingredient> ingredients = ingredientRepo.findAll();
     Type[] types = Ingredient.Type.values();
     for (Type type : types) {
       model.addAttribute(type.toString().toLowerCase(),
-          filterByType(allIngredients, type));
+          filterByType(ingredients, type));
     }
   }
 
@@ -78,7 +90,7 @@ public class DesignTacoController {
 
       taco.setIngredients(ingredients);
     }
-    
+
     // 手动验证
     if (taco.getName() == null || taco.getName().length() < 5) {
       errors.rejectValue("name", "name.size", "Name must be at least 5 characters long");
@@ -86,7 +98,7 @@ public class DesignTacoController {
     if (taco.getIngredients() == null || taco.getIngredients().isEmpty()) {
       errors.rejectValue("ingredients", "ingredients.size", "You must choose at least 1 ingredient");
     }
-    
+
     if (errors.hasErrors()) {
       System.out.println("Name: " + taco.getName());
       System.out.println("Ingredients: " + taco.getIngredients());
@@ -104,9 +116,8 @@ public class DesignTacoController {
   }
 
   private Iterable<Ingredient> filterByType(
-      List<Ingredient> ingredients, Type type) {
-    return ingredients
-        .stream()
+      Iterable<Ingredient> ingredients, Type type) {
+    return StreamSupport.stream(ingredients.spliterator(), false)
         .filter(x -> x.getType().equals(type))
         .collect(Collectors.toList());
   }

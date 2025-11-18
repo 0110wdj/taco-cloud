@@ -4,9 +4,14 @@ import java.util.List;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import java.util.Date;
 
 @Data
 public class Taco {
+
+  private Long id;
+
+  private Date placedAt;
 
   @NotNull
   @Size(min = 5, message = "Name must be at least 5 characters long")
@@ -15,6 +20,22 @@ public class Taco {
   @NotNull
   @Size(min = 1, message = "You must choose at least 1 ingredient")
   private List<Ingredient> ingredients;
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public Date getPlacedAt() {
+    return placedAt;
+  }
+
+  public void setPlacedAt(Date placedAt) {
+    this.placedAt = placedAt;
+  }
 
   public String getName() {
     return name;
