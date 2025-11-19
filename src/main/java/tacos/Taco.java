@@ -13,6 +13,8 @@ public class Taco {
 
   private Date placedAt;
 
+  private Date createdAt;
+
   @NotNull
   @Size(min = 5, message = "Name must be at least 5 characters long")
   private String name;
@@ -35,6 +37,14 @@ public class Taco {
 
   public void setPlacedAt(Date placedAt) {
     this.placedAt = placedAt;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 
   public String getName() {
