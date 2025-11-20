@@ -28,44 +28,4 @@ public class Taco {
   @NotNull
   @Size(min = 1, message = "You must choose at least 1 ingredient")
   private List<Ingredient> ingredients;
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public Date getPlacedAt() {
-    return placedAt;
-  }
-
-  public void setPlacedAt(Date placedAt) {
-    this.placedAt = placedAt;
-  }
-
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public List<Ingredient> getIngredients() {
-    return ingredients;
-  }
-
-  public void setIngredients(List<Ingredient> ingredients) {
-    this.ingredients = ingredients;
-  }
 }

@@ -1,6 +1,8 @@
 package tacos;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.AccessLevel;
@@ -12,23 +14,26 @@ import lombok.NoArgsConstructor;
 @Table("Ingredient")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-public class Ingredient {
+public class Ingredient implements Persistable<String> {
 
   @Id
   private String id;
   private String name;
   private Type type;
 
-  public String getId() {
-    return id;
+  @Transient
+  private boolean isNew = true;
+
+  public Ingredient(String id, String name, Type type) {
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.isNew = true;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public Type getType() {
-    return type;
+  @Override
+  public boolean isNew() {
+    return isNew;
   }
 
   public enum Type {
