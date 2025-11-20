@@ -40,6 +40,7 @@ public class OrderController {
       // order 对象已经通过 @ModelAttribute 添加到模型中
       return "orderForm";
     }
+    order.setPlacedAt(new java.util.Date());
     orderRepo.save(order);
     sessionStatus.setComplete();
 
