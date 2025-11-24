@@ -1,13 +1,13 @@
 package tacos;
 
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Table;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Data
-@Table("Ingredient_Ref")
+@Table(name = "Ingredient_Ref")
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class IngredientRef {

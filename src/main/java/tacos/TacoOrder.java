@@ -6,23 +6,32 @@ import jakarta.validation.constraints.NotBlank;
 // import org.hibernate.validator.constraints.CreditCardNumber;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import lombok.Data;
 import java.util.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+
 @Data
-@Table("Taco_Order")
-public class TacoOrder {
+@Entity
+@Table(name = "Taco_Order")
+public class TacoOrder implements Serializable{
 
   private static final long serialVersionUID = 1L;
 
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  private Date placedAt;
+  private Date placedAt = new Date();
 
   // @Column("customer_name")
   @NotBlank(message = "Delivery name is required")
@@ -43,6 +52,10 @@ public class TacoOrder {
   // @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
   private String ccCVV;
 
+  @OneToMany(cascade = CascadeType.ALL)
   private List<Taco> tacos = new ArrayList<>();
 
+  public void addTaco(Taco taco) {
+    this.tacos.add(taco);
+  }
 }
