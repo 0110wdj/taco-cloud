@@ -8,3 +8,7 @@ spring:
   h2:
     console:
       enabled: true
+  cassandra:
+    keyspace-name: taco_cloud
+    schema-action: recreate
+    local-datacenter: datacenter1
