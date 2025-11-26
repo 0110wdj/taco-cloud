@@ -1,14 +1,8 @@
 spring:
   application:
     name: taco-cloud
-  datasource:
-    url: jdbc:h2:mem:tacocloud
-    generate-unique-name: false
-    name: tacocloud
-  h2:
-    console:
-      enabled: true
-  cassandra:
-    keyspace-name: taco_cloud
-    schema-action: recreate
-    local-datacenter: datacenter1
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: tacocloud

@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Taco;
-import tacos.TacoUDRUtils;
 import tacos.data.IngredientRepository;
 
 @Controller
@@ -89,7 +88,7 @@ public class DesignTacoController {
           .filter(ing -> ing != null)
           .collect(Collectors.toList());
 
-      taco.setIngredients(TacoUDRUtils.toIngredientUDTs(ingredients));
+      taco.setIngredients(ingredients);
     }
 
     // 手动验证
