@@ -1,6 +1,13 @@
 spring:
   application:
     name: taco-cloud
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liEECDiHrq5PIBog
+            client-secret: 01ff35485e88a48827638821114006c533ec47eb
   datasource:
     url: jdbc:h2:mem:tacocloud
     driver-class-name: org.h2.Driver

@@ -25,5 +25,11 @@
 
       <input type="submit" value="Login"/>
     </form>
+
+    <hr/>
+    <p>Or login with:</p>
+    <a th:href="@{/oauth2/authorization/github}">
+      <button type="button">通过 GitHub 登录</button>
+    </a>
   </body>
 </html>
