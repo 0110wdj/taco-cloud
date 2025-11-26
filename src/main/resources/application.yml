@@ -1,8 +1,16 @@
 spring:
   application:
     name: taco-cloud
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: tacocloud
+  datasource:
+    url: jdbc:h2:mem:tacocloud
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
