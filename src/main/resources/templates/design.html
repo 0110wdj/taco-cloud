@@ -248,9 +248,12 @@
                 <h1>Design your taco!</h1>
             </div>
             
-            <form method="POST" th:action="@{/logout}">
-                <button type="submit" class="btn-logout">🚪 Logout</button>
-            </form>
+            <div style="display: flex; gap: 10px;">
+                <a th:href="@{/}" class="btn-logout" style="text-decoration: none; display: inline-block; text-align: center;">🏠 Home</a>
+                <form method="POST" th:action="@{/logout}" style="margin: 0;">
+                    <button type="submit" class="btn-logout">🚪 Logout</button>
+                </form>
+            </div>
         </div>
         
         <form method="POST" th:action="@{/design}" th:object="${taco}">

@@ -186,12 +186,18 @@
             <p class="subtitle">Craft your perfect taco experience</p>
         </div>
         
+        <!-- User Welcome / Login Prompt -->
+        <div class="user-info">
+            <span sec:authorize="isAuthenticated()">
+                👤 Welcome, <strong sec:authentication="name">User</strong>!
+            </span>
+            <span sec:authorize="!isAuthenticated()">
+                👋 Welcome! Please <strong>log in</strong> to start ordering.
+            </span>
+        </div>
+        
         <!-- Authenticated User Navigation -->
         <div sec:authorize="isAuthenticated()">
-            <div class="user-info">
-                👤 Welcome, <strong sec:authentication="name">User</strong>!
-            </div>
-            
             <!-- Main Navigation -->
             <div class="nav-section">
                 <h2>🎨 Get Started</h2>
