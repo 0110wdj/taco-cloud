@@ -1,12 +1,253 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Taco Cloud</title>
+    <title>Taco Cloud - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 50px 40px;
+            text-align: center;
+        }
+        
+        .logo-section {
+            margin-bottom: 30px;
+        }
+        
+        .logo-section img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+        
+        .nav-section {
+            margin-bottom: 40px;
+        }
+        
+        .nav-section h2 {
+            color: #555;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: left;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .button-group.full {
+            grid-template-columns: 1fr;
+        }
+        
+        button, a.btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8e8e8;
+            border-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .btn-admin {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
+        }
+        
+        .auth-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .user-info {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        
+        .user-info strong {
+            color: #333;
+        }
+        
+        .icon {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+            
+            button, a.btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
-<h1>Welcome to...</h1>
-<img th:src="@{/images/TacoCloud.png}"/>
+    <div class="container">
+        <div class="logo-section">
+            <img th:src="@{/images/TacoCloud.png}" alt="Taco Cloud Logo"/>
+            <h1>🌮 Taco Cloud</h1>
+            <p class="subtitle">Craft your perfect taco experience</p>
+        </div>
+        
+        <!-- Authenticated User Navigation -->
+        <div sec:authorize="isAuthenticated()">
+            <div class="user-info">
+                👤 Welcome, <strong sec:authentication="name">User</strong>!
+            </div>
+            
+            <!-- Main Navigation -->
+            <div class="nav-section">
+                <h2>🎨 Get Started</h2>
+                <div class="button-group">
+                    <a href="/design" class="btn btn-primary">
+                        <span class="icon">🎨</span>Design Taco
+                    </a>
+                    <a href="/orders" class="btn btn-primary">
+                        <span class="icon">📋</span>My Orders
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Admin Section - Only visible to ADMIN users -->
+            <div sec:authorize="hasRole('ADMIN')" class="nav-section">
+                <h2>🔐 Administration</h2>
+                <div class="button-group full">
+                    <a href="/admin" class="btn btn-admin">
+                        <span class="icon">⚙️</span>Admin Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Logout -->
+            <div class="auth-section">
+                <form method="POST" th:action="@{/logout}" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary">
+                        <span class="icon">🚪</span>Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Unauthenticated User Navigation -->
+        <div sec:authorize="!isAuthenticated()">
+            <div class="nav-section">
+                <h2>🚀 Get Started</h2>
+                <div class="button-group">
+                    <a href="/login" class="btn btn-primary">
+                        <span class="icon">🔓</span>Login
+                    </a>
+                    <a href="/register" class="btn btn-secondary">
+                        <span class="icon">✍️</span>Register
+                    </a>
+                </div>
+            </div>
+            
+            <div class="auth-section">
+                <p style="color: #999; margin-bottom: 15px;">Or continue with:</p>
+                <div class="button-group full">
+                    <a href="/oauth2/authorization/github" class="btn btn-secondary">
+                        <span class="icon">🐙</span>GitHub Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

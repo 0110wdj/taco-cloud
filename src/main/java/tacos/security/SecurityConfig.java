@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import java.util.Collections;
 
@@ -22,6 +23,7 @@ import tacos.data.UserRepository;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
   @Bean
@@ -44,6 +46,7 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/design", "/orders", "/orders/**").hasRole("USER")
             .requestMatchers("/", "/**").permitAll())
         .formLogin(form -> form

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Orders - Taco Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .orders-section {
+            margin: 30px 0;
+        }
+        
+        .order-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .order-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .order-id {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .order-date {
+            color: #666;
+            font-size: 0.9em;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        
+        .order-details {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .order-details strong {
+            color: #333;
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 60px 20px;
+            font-size: 1.1em;
+        }
+        
+        .empty-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .nav-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        button, a.btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8e8e8;
+            border-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(132, 250, 176, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+            
+            button, a.btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 My Orders</h1>
+            <div class="header-actions">
+                <a href="/design" class="btn btn-secondary">← Design</a>
+                <a href="/" class="btn btn-secondary">🏠 Home</a>
+            </div>
+        </div>
+        
+        <div class="orders-section">
+            <div th:if="${orders.isEmpty()}" class="empty-message">
+                <div class="empty-icon">🌮</div>
+                <p>You haven't placed any orders yet.</p>
+                <p style="margin-top: 10px; font-size: 0.9em;">Start designing your perfect taco now!</p>
+            </div>
+            
+            <div th:unless="${orders.isEmpty()}">
+                <div th:each="order : ${orders}" class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">Order #<span th:text="${order.id}">1</span></span>
+                        <span class="order-date" th:text="${#dates.format(order.placedAt, 'yyyy-MM-dd HH:mm')}">2025-11-27 20:00</span>
+                    </div>
+                    <div class="order-details">
+                        <strong>📍 Delivery to:</strong><br/>
+                        <span th:text="${order.deliveryName}">John Doe</span><br/>
+                        <span th:text="${order.deliveryStreet}">123 Main St</span><br/>
+                        <span th:text="${order.deliveryCity}">Springfield</span>, 
+                        <span th:text="${order.deliveryState}">IL</span>
+                        <span th:text="${order.deliveryZip}">62701</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="button-group">
+                <a th:href="@{/orders/current}" class="btn btn-success">
+                    ➕ Place New Order
+                </a>
+                <a th:href="@{/design}" class="btn btn-primary">
+                    🎨 Design Taco
+                </a>
+                <a th:href="@{/}" class="btn btn-secondary">
+                    🏠 Home
+                </a>
+                <form method="POST" th:action="@{/logout}" style="display: contents;">
+                    <button type="submit" class="btn btn-secondary">
+                        🚪 Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

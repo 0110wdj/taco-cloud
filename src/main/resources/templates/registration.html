@@ -2,35 +2,207 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 
-  <head>
-    <title>Taco Cloud</title>
-  </head>
+<head>
+    <title>Register - Taco Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            max-width: 100px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 5px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+        
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+            grid-column: span 2;
+        }
+        
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .login-link {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
 
-  <body>
-    <h1>Register</h1>
-
-    <img th:src="@{/images/TacoCloud.png}"/>
-
-    <form method="POST" th:action="@{/register}" id="registerForm">
-      <label for="username">Username: </label>
-      <input type="text" name="username"/><br/>
-      <label for="password">Password: </label>
-      <input type="password" name="password"/><br/>
-      <label for="confirm">Confirm password: </label>
-      <input type="password" name="confirm"/><br/>
-      <label for="fullname">Full name: </label>
-      <input type="text" name="fullname"/><br/>
-      <label for="street">Street: </label>
-      <input type="text" name="street"/><br/>
-      <label for="city">City: </label>
-      <input type="text" name="city"/><br/>
-      <label for="state">State: </label>
-      <input type="text" name="state"/><br/>
-      <label for="zip">Zip: </label>
-      <input type="text" name="zip"/><br/>
-      <label for="phone">Phone: </label>
-      <input type="text" name="phone"/><br/>
-      <input type="submit" value="Register"/>
-    </form>
-  </body>
+<body>
+    <div class="register-container">
+        <div class="header">
+            <img th:src="@{/images/TacoCloud.png}" class="logo" alt="Taco Cloud Logo"/>
+            <h1>Create Account</h1>
+            <p style="color: #666; margin-top: 5px;">Join us to craft your perfect taco</p>
+        </div>
+        
+        <form method="POST" th:action="@{/register}" id="registerForm" class="form-grid">
+            <div class="form-group full-width">
+                <label for="username">Username</label>
+                <input type="text" name="username" placeholder="Choose a username"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" placeholder="Choose a password"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm">Confirm password</label>
+                <input type="password" name="confirm" placeholder="Confirm password"/>
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="fullname">Full Name</label>
+                <input type="text" name="fullname" placeholder="Your full name"/>
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="street">Street Address</label>
+                <input type="text" name="street" placeholder="123 Taco St"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" name="city" placeholder="City"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" name="state" placeholder="State"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="zip">Zip Code</label>
+                <input type="text" name="zip" placeholder="Zip Code"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" name="phone" placeholder="Phone Number"/>
+            </div>
+            
+            <div class="form-group full-width">
+                <input type="submit" value="Create Account"/>
+            </div>
+            
+            <div class="login-link">
+                Already have an account? <a th:href="@{/login}">Sign in here</a>
+            </div>
+        </form>
+    </div>
+</body>
 </html>

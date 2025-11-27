@@ -2,6 +2,7 @@ package tacos.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import jakarta.validation.Valid;
 import org.springframework.validation.Errors;
 import tacos.TacoOrder;
+import tacos.User;
 import tacos.data.OrderRepository;
 
 @Controller
@@ -24,6 +26,14 @@ public class OrderController {
 
   public OrderController(OrderRepository orderRepo) {
     this.orderRepo = orderRepo;
+  }
+
+  @GetMapping
+  public String ordersForUser(Authentication authentication, Model model) {
+    User user = (User) authentication.getPrincipal();
+    // Get all orders (in a real app, you'd filter by user)
+    model.addAttribute("orders", orderRepo.findAll());
+    return "orders";
   }
 
   @GetMapping("/current")

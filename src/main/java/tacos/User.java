@@ -35,10 +35,19 @@ public class User implements UserDetails {
   private final String state;
   private final String zip;
   private final String phoneNumber;
+  
+  private String role = "ROLE_USER";
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+    // ADMIN users have both ROLE_ADMIN and ROLE_USER permissions
+    if ("ROLE_ADMIN".equals(role)) {
+      return Arrays.asList(
+          new SimpleGrantedAuthority("ROLE_ADMIN"),
+          new SimpleGrantedAuthority("ROLE_USER")
+      );
+    }
+    return Arrays.asList(new SimpleGrantedAuthority(role));
   }
 
   @Override

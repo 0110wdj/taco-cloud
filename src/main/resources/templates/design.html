@@ -1,62 +1,327 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Taco Cloud</title>
-        <link rel="stylesheet" th:href="@{/styles.css}" />
-    </head>
+<head>
+    <title>Design Taco - Taco Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 60px;
+            width: auto;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .ingredient-group {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+        
+        .ingredient-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .ingredient-group h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-size: 1.2em;
+        }
+        
+        .ingredient-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Custom Checkbox */
+        .checkbox-wrapper {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            color: #495057;
+            user-select: none;
+        }
+        
+        .checkbox-wrapper input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 22px;
+            width: 22px;
+            background-color: white;
+            border: 2px solid #adb5bd;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-wrapper:hover input ~ .checkmark {
+            border-color: #667eea;
+        }
+        
+        .checkbox-wrapper input:checked ~ .checkmark {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        
+        .checkbox-wrapper input:checked ~ .checkmark:after {
+            display: block;
+        }
+        
+        .checkbox-wrapper .checkmark:after {
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .submission-area {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .submission-area h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .taco-name-input {
+            padding: 12px 20px;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1.1em;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .taco-name-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .error-text {
+            color: #dc3545;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-logout {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 15px;
+            border-radius: 6px;
+            color: #495057;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-logout:hover {
+            background: #e9ecef;
+            color: #212529;
+        }
 
-    <body>
-        <form method="POST" th:action="@{/logout}" style="float: right;">
-            <input type="submit" value="Logout"/>
-        </form>
-        <h1>Design your taco!</h1>
-        <img th:src="@{/images/TacoCloud.png}"/>
+        @media (max-width: 768px) {
+            .ingredients-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .header-left {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img th:src="@{/images/TacoCloud.png}" class="logo" alt="Taco Cloud"/>
+                <h1>Design your taco!</h1>
+            </div>
+            
+            <form method="POST" th:action="@{/logout}">
+                <button type="submit" class="btn-logout">🚪 Logout</button>
+            </form>
+        </div>
+        
         <form method="POST" th:action="@{/design}" th:object="${taco}">
-            <div class="grid">
+            <div class="ingredients-grid">
                 <div class="ingredient-group" id="wraps">
-                    <h3>Designate your wrap:</h3>
+                    <h3>🌮 Wraps</h3>
                     <div th:each="ingredient : ${wrap}">
-                        <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
-                        <span th:text="${ingredient.name}">INGREDIENT</span><br/>
+                        <label class="checkbox-wrapper">
+                            <span th:text="${ingredient.name}">INGREDIENT</span>
+                            <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
+                
                 <div class="ingredient-group" id="proteins">
-                    <h3>Pick your protein:</h3>
+                    <h3>🥩 Proteins</h3>
                     <div th:each="ingredient : ${protein}">
-                        <input name="ingredients" type="checkbox" th:value="${ingredient.id}" />
-                        <span th:text="${ingredient.name}">INGREDIENT</span><br/>
+                        <label class="checkbox-wrapper">
+                            <span th:text="${ingredient.name}">INGREDIENT</span>
+                            <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
+                
                 <div class="ingredient-group" id="cheeses">
-                    <h3>Choose your cheese:</h3>
+                    <h3>🧀 Cheeses</h3>
                     <div th:each="ingredient : ${cheese}">
-                        <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
-                        <span th:text="${ingredient.name}">INGREDIENT</span><br/>
+                        <label class="checkbox-wrapper">
+                            <span th:text="${ingredient.name}">INGREDIENT</span>
+                            <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
+                
                 <div class="ingredient-group" id="veggies">
-                    <h3>Determine your veggies:</h3>
+                    <h3>🥬 Veggies</h3>
                     <div th:each="ingredient : ${veggies}">
-                        <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
-                        <span th:text="${ingredient.name}">INGREDIENT</span><br/>
+                        <label class="checkbox-wrapper">
+                            <span th:text="${ingredient.name}">INGREDIENT</span>
+                            <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
+                
                 <div class="ingredient-group" id="sauces">
-                    <h3>Select your sauce:</h3>
+                    <h3>🌶️ Sauces</h3>
                     <div th:each="ingredient : ${sauce}">
-                        <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
-                        <span th:text="${ingredient.name}">INGREDIENT</span><br/>
+                        <label class="checkbox-wrapper">
+                            <span th:text="${ingredient.name}">INGREDIENT</span>
+                            <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
             </div>
-            <div>
-                <h3>Name your taco creation:</h3>
-                <input type="text" th:field="*{name}"/>
-                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span><br/>
-                <span th:if="${#fields.hasErrors('ingredients')}" th:errors="*{ingredients}">Ingredients Error</span><br/>
-                <button>Submit your taco</button>
+            
+            <div class="submission-area">
+                <h3>✨ Name your masterpiece</h3>
+                
+                <input type="text" th:field="*{name}" class="taco-name-input" placeholder="e.g., Super Spicy Supreme"/>
+                <span class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+                <span class="error-text" th:if="${#fields.hasErrors('ingredients')}" th:errors="*{ingredients}">Ingredients Error</span>
+                
+                <br/>
+                <button type="submit" class="btn-submit">Create Taco</button>
             </div>
         </form>
-    </body>
+    </div>
+</body>
 </html>

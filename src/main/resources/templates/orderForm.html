@@ -2,66 +2,251 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title>Taco Cloud</title>
-  <link rel="stylesheet" th:href="@{/styles.css}" />
+    <title>Order - Taco Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+        
+        .logo {
+            height: 50px;
+            width: auto;
+            margin-right: 15px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+        
+        h3 {
+            color: #495057;
+            margin: 25px 0 15px;
+            font-size: 1.2em;
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 5px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-group.one-third {
+            grid-column: span 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .validation-error {
+            color: #dc3545;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .input-error {
+            border-color: #dc3545 !important;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-back {
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.2s ease;
+        }
+        
+        .btn-back:hover {
+            color: #343a40;
+        }
+        
+        .section-divider {
+            border-top: 1px solid #e9ecef;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width, 
+            .form-group.one-third {
+                grid-column: span 1;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <form method="POST" th:action="@{/orders}" th:object="${order}">
-    <h1>Order your taco creations!</h1>
-    <img th:src="@{/images/TacoCloud.png}" />
-    <a th:href="@{/design}" id="another">Design another taco</a><br />
-    <div th:if="${#fields.hasErrors()}">
-      <span class="validationError">
-        Please correct the problems below and resubmit.
-      </span>
+    <div class="container">
+        <div class="header">
+            <div>
+                <img th:src="@{/images/TacoCloud.png}" class="logo" alt="Taco Cloud"/>
+                <h1>Check Out</h1>
+            </div>
+            <a th:href="@{/design}" class="btn-back">← Design another taco</a>
+        </div>
+        
+        <form method="POST" th:action="@{/orders}" th:object="${order}">
+            
+            <div th:if="${#fields.hasErrors()}" class="error-message">
+                ⚠️ <strong>Please correct the problems below and resubmit.</strong>
+            </div>
+            
+            <h3>📍 Delivery Details</h3>
+            
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="deliveryName">Full Name</label>
+                    <input type="text" th:field="*{deliveryName}" th:classappend="${#fields.hasErrors('deliveryName')} ? 'input-error' : ''" placeholder="Who is this for?"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('deliveryName')}" th:errors="*{deliveryName}">Name Error</span>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="deliveryStreet">Street Address</label>
+                    <input type="text" th:field="*{deliveryStreet}" th:classappend="${#fields.hasErrors('deliveryStreet')} ? 'input-error' : ''" placeholder="123 Taco St"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('deliveryStreet')}" th:errors="*{deliveryStreet}">Street Error</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deliveryCity">City</label>
+                    <input type="text" th:field="*{deliveryCity}" th:classappend="${#fields.hasErrors('deliveryCity')} ? 'input-error' : ''"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('deliveryCity')}" th:errors="*{deliveryCity}">City Error</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deliveryState">State</label>
+                    <input type="text" th:field="*{deliveryState}" th:classappend="${#fields.hasErrors('deliveryState')} ? 'input-error' : ''"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('deliveryState')}" th:errors="*{deliveryState}">State Error</span>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="deliveryZip">Zip Code</label>
+                    <input type="text" th:field="*{deliveryZip}" th:classappend="${#fields.hasErrors('deliveryZip')} ? 'input-error' : ''"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('deliveryZip')}" th:errors="*{deliveryZip}">Zip Error</span>
+                </div>
+            </div>
+            
+            <div class="section-divider"></div>
+            
+            <h3>💳 Payment Details</h3>
+            
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="ccNumber">Credit Card Number</label>
+                    <input type="text" th:field="*{ccNumber}" th:classappend="${#fields.hasErrors('ccNumber')} ? 'input-error' : ''" placeholder="XXXX XXXX XXXX XXXX"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('ccNumber')}" th:errors="*{ccNumber}">CC Num Error</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ccExpiration">Expiration (MM/YY)</label>
+                    <input type="text" th:field="*{ccExpiration}" th:classappend="${#fields.hasErrors('ccExpiration')} ? 'input-error' : ''" placeholder="MM/YY"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('ccExpiration')}" th:errors="*{ccExpiration}">CC Exp Error</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ccCVV">CVV</label>
+                    <input type="text" th:field="*{ccCVV}" th:classappend="${#fields.hasErrors('ccCVV')} ? 'input-error' : ''" placeholder="123"/>
+                    <span class="validation-error" th:if="${#fields.hasErrors('ccCVV')}" th:errors="*{ccCVV}">CC CVV Error</span>
+                </div>
+            </div>
+            
+            <input type="submit" value="Submit Order" class="btn-submit"/>
+            
+        </form>
     </div>
-    <h3>Deliver my taco masterpieces to...</h3>
-
-    <label for="name">Name: </label>
-    <input type="text" th:field="*{deliveryName}" />
-    <span class="validationError" th:if="${#fields.hasErrors('deliveryName')}" th:errors="*{deliveryName}">Name Error</span>
-    <br />
-
-    <label for="street">Street address: </label>
-    <input type="text" th:field="*{deliveryStreet}" />
-    <span class="validationError" th:if="${#fields.hasErrors('deliveryStreet')}" th:errors="*{deliveryStreet}">Street Error</span>
-    <br />
-
-    <label for="city">City: </label>
-    <input type="text" th:field="*{deliveryCity}" />
-    <span class="validationError" th:if="${#fields.hasErrors('deliveryCity')}" th:errors="*{deliveryCity}">City Error</span>
-    <br />
-
-    <label for="state">State: </label>
-    <input type="text" th:field="*{deliveryState}" />
-    <span class="validationError" th:if="${#fields.hasErrors('deliveryState')}" th:errors="*{deliveryState}">State Error</span>
-    <br />
-
-    <label for="zip">Zip code: </label>
-    <input type="text" th:field="*{deliveryZip}" />
-    <span class="validationError" th:if="${#fields.hasErrors('deliveryZip')}" th:errors="*{deliveryZip}">Zip Error</span>
-    <br />
-
-    <h3>Here's how I'll pay...</h3>
-
-    <label for="ccNumber">Credit Card #: </label>
-    <input type="text" th:field="*{ccNumber}" />
-    <span class="validationError" th:if="${#fields.hasErrors('ccNumber')}" th:errors="*{ccNumber}">CC Num Error</span>
-    <br />
-
-    <label for="ccExpiration">Expiration: </label>
-    <input type="text" th:field="*{ccExpiration}" />
-    <span class="validationError" th:if="${#fields.hasErrors('ccExpiration')}" th:errors="*{ccExpiration}">CC Exp Error</span>
-    <br />
-
-    <label for="ccCVV">CVV: </label>
-    <input type="text" th:field="*{ccCVV}" />
-    <span class="validationError" th:if="${#fields.hasErrors('ccCVV')}" th:errors="*{ccCVV}">CC CVV Error</span>
-    <br />
-
-    <input type="submit" value="Submit order" />
-  </form>
 </body>
-
 </html>

@@ -14,6 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import tacos.data.IngredientRepository;
+import tacos.data.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Objects;
 
 @WebMvcTest(HomeController.class)
@@ -25,6 +27,12 @@ public class HomeControllerTest {
 
     @MockBean
     private IngredientRepository ingredientRepository;
+
+    @MockBean
+    private UserRepository userRepository;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @Test
     @WithMockUser
