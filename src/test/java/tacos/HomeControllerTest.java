@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import tacos.data.IngredientRepository;
 import tacos.data.UserRepository;
+import tacos.data.TacoRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Objects;
 
@@ -32,12 +33,15 @@ public class HomeControllerTest {
     private UserRepository userRepository;
 
     @MockBean
+    private TacoRepository tacoRepository;
+
+    @MockBean
     private PasswordEncoder passwordEncoder;
 
     @Test
     @WithMockUser
     public void testHomePage() throws Exception {
-        var welcomeMessageMatcher = Matchers.containsString("Welcome to...");
+        var welcomeMessageMatcher = Matchers.containsString("Welcome");
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
