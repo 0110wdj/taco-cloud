@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.http.HttpMethod;
 
 import java.util.Collections;
 
@@ -48,6 +49,14 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/design", "/orders", "/orders/**").hasRole("USER")
+            // 资源服务器 API 权限控制
+            .requestMatchers(HttpMethod.POST, "/api/ingredients")
+                .hasAuthority("SCOPE_writeIngredients")
+            .requestMatchers(HttpMethod.DELETE, "/api/ingredients/**")
+                .hasAuthority("SCOPE_deleteIngredients")
+            // Spring Data REST 端点需要认证
+            .requestMatchers(HttpMethod.POST, "/ingredients").hasAuthority("SCOPE_writeIngredients")
+            .requestMatchers(HttpMethod.DELETE, "/ingredients/**").hasAuthority("SCOPE_deleteIngredients")
             .requestMatchers("/", "/**").permitAll())
         .formLogin(form -> form
             .loginPage("/login")
@@ -59,8 +68,9 @@ public class SecurityConfig {
                 .userService(oauth2UserService())))
         .logout(logout -> logout
             .logoutSuccessUrl("/"))
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))
         .csrf(csrf -> csrf
-            .ignoringRequestMatchers("/h2-console/**"))
+            .ignoringRequestMatchers("/h2-console/**", "/api/**", "/ingredients/**"))
         .headers(headers -> headers
             .frameOptions(frame -> frame.sameOrigin()))
         .build();
