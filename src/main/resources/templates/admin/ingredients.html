@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ingredients Management - Taco Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .add-form {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .add-form h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.85em;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .type-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .type-WRAP { background: #e3f2fd; color: #1565c0; }
+        .type-PROTEIN { background: #fce4ec; color: #c62828; }
+        .type-VEGGIES { background: #e8f5e9; color: #2e7d32; }
+        .type-CHEESE { background: #fff8e1; color: #f57f17; }
+        .type-SAUCE { background: #f3e5f5; color: #7b1fa2; }
+        
+        .nav-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .nav-links a {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌮 Ingredients Management</h1>
+        
+        <div class="add-form">
+            <h2>Add New Ingredient</h2>
+            <form method="POST" th:action="@{/admin/ingredients}" th:object="${ingredient}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id">ID</label>
+                        <input type="text" id="id" th:field="*{id}" placeholder="e.g., CRKT" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" th:field="*{name}" placeholder="e.g., Crispy Chicken" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <select id="type" th:field="*{type}" required>
+                            <option value="">Select type...</option>
+                            <option value="WRAP">WRAP</option>
+                            <option value="PROTEIN">PROTEIN</option>
+                            <option value="VEGGIES">VEGGIES</option>
+                            <option value="CHEESE">CHEESE</option>
+                            <option value="SAUCE">SAUCE</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn btn-primary">Add Ingredient</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <h2>Current Ingredients</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ing : ${ingredients}">
+                    <td th:text="${ing.id}">ID</td>
+                    <td th:text="${ing.name}">Name</td>
+                    <td>
+                        <span class="type-badge" th:classappend="'type-' + ${ing.type}" th:text="${ing.type}">Type</span>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/admin/ingredients/delete/{id}(id=${ing.id})}" 
+                              style="display: inline;"
+                              onsubmit="return confirm('Delete this ingredient?');">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="nav-links">
+            <a href="/" class="btn btn-secondary">🏠 Home</a>
+        </div>
+    </div>
+</body>
+</html>
