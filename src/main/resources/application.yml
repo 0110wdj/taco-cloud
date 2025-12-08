@@ -1,4 +1,10 @@
 spring:
+  artemis:
+    user: tacoweb
+    password: 13tm31n
+  jms:
+    template:
+      default-destination: tacocloud.order.queue
   application:
     name: taco-cloud
   security:

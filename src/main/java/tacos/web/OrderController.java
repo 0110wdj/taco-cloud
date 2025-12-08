@@ -21,6 +21,7 @@ import tacos.TacoOrder;
 import tacos.User;
 import tacos.data.OrderRepository;
 import tacos.data.UserRepository;
+import tacos.messaging.OrderMessagingService;
 
 @Controller
 @RequestMapping("/orders")
@@ -29,10 +30,13 @@ public class OrderController {
   private static final Logger log = LoggerFactory.getLogger(OrderController.class);
   private OrderRepository orderRepo;
   private UserRepository userRepo;
+  private OrderMessagingService messageService;
 
-  public OrderController(OrderRepository orderRepo, UserRepository userRepo) {
+  public OrderController(OrderRepository orderRepo, UserRepository userRepo,
+      OrderMessagingService messageService) {
     this.orderRepo = orderRepo;
     this.userRepo = userRepo;
+    this.messageService = messageService;
   }
 
   @GetMapping
@@ -72,6 +76,7 @@ public class OrderController {
     order.setUser(user);
     order.setPlacedAt(new java.util.Date());
     orderRepo.save(order);
+    messageService.sendOrder(order);
     sessionStatus.setComplete();
 
     log.info("Order submitted: " + order);
