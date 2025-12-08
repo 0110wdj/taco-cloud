@@ -1,6 +1,10 @@
 package tacos;
 import java.util.Arrays;
 import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,8 +21,9 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name = "taco_user")
 @Data
-@NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
+@NoArgsConstructor(access=AccessLevel.PUBLIC, force=true)
 @RequiredArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails {
 
   private static final long serialVersionUID = 1L;
@@ -39,6 +44,7 @@ public class User implements UserDetails {
   private String role = "ROLE_USER";
 
   @Override
+  @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
     // ADMIN users have both ROLE_ADMIN and ROLE_USER permissions
     if ("ROLE_ADMIN".equals(role)) {
@@ -51,21 +57,25 @@ public class User implements UserDetails {
   }
 
   @Override
+  @JsonIgnore
   public boolean isAccountNonExpired() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public boolean isAccountNonLocked() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public boolean isCredentialsNonExpired() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public boolean isEnabled() {
     return true;
   }

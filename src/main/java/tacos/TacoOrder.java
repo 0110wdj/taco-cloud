@@ -19,9 +19,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TacoOrder implements Serializable {
 
   private static final long serialVersionUID = 1L;
