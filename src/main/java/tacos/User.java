@@ -32,6 +32,7 @@ public class User implements UserDetails {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Long id;
 
+  @jakarta.persistence.Column(unique = true)
   private final String username;
   private final String password;
   private final String fullname;
