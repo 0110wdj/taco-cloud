@@ -2,27 +2,27 @@ package tacos.messaging;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import tacos.TacoOrder;
 
 @Component
-public class JmsOrderReceiver implements OrderReceiver {
+public class RabbitOrderReceiver implements OrderReceiver {
 
-    private static final Logger log = LoggerFactory.getLogger(JmsOrderReceiver.class);
-    private JmsTemplate jms;
+    private static final Logger log = LoggerFactory.getLogger(RabbitOrderReceiver.class);
+    private RabbitTemplate rabbit;
 
-    public JmsOrderReceiver(JmsTemplate jms) {
-        this.jms = jms;
+    public RabbitOrderReceiver(RabbitTemplate rabbit) {
+        this.rabbit = rabbit;
         // 设置接收超时时间为 5 秒，避免长时间阻塞
-        this.jms.setReceiveTimeout(5000);
+        this.rabbit.setReceiveTimeout(5000);
     }
 
     @Override
     public TacoOrder receiveOrder() {
         try {
-            TacoOrder order = (TacoOrder) jms.receiveAndConvert("tacocloud.order.queue");
+            TacoOrder order = (TacoOrder) rabbit.receiveAndConvert("tacocloud.order.queue");
             if (order != null) {
                 log.info("Received order: {}", order.getId());
             } else {

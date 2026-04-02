@@ -1,33 +1,31 @@
 package tacos.messaging;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 
-import tacos.Ingredient;
-import tacos.Taco;
-import tacos.TacoOrder;
-import tacos.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class MessagingConfig {
 
     @Bean
-    public MappingJackson2MessageConverter messageConverter() {
-        MappingJackson2MessageConverter messageConverter = 
-                new MappingJackson2MessageConverter();
-        messageConverter.setTypeIdPropertyName("_typeId");
+    public Queue orderQueue() {
+        return new Queue("tacocloud.order.queue", false);
+    }
 
-        Map<String, Class<?>> typeIdMappings = new HashMap<>();
-        typeIdMappings.put("order", TacoOrder.class);
-        typeIdMappings.put("taco", Taco.class);
-        typeIdMappings.put("ingredient", Ingredient.class);
-        typeIdMappings.put("user", User.class);
-        messageConverter.setTypeIdMappings(typeIdMappings);
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter(ObjectMapper objectMapper) {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(objectMapper);
+        DefaultJackson2JavaTypeMapper typeMapper =
+                (DefaultJackson2JavaTypeMapper) converter.getJavaTypeMapper();
 
-        return messageConverter;
+        // Allow deserialization of our custom classes in the tacos package
+        typeMapper.addTrustedPackages("tacos");
+        converter.setJavaTypeMapper(typeMapper);
+
+        return converter;
     }
 }

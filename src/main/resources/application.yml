@@ -1,10 +1,16 @@
 spring:
-  artemis:
-    user: tacoweb
-    password: 13tm31n
-  jms:
-    template:
-      default-destination: tacocloud.order.queue
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+  # Allow deserialization of our custom classes
+  amqp:
+    deserialization:
+      trust-all: true
   application:
     name: taco-cloud
   security:
