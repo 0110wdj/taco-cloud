@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .oidcUserService(oidcUserService())))
         .logout(logout -> logout
             .logoutSuccessUrl("/"))
-        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))
+//        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))
         .csrf(csrf -> csrf
             .ignoringRequestMatchers("/h2-console/**", "/api/**", "/ingredients/**"))
         .headers(headers -> headers

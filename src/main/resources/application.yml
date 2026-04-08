@@ -8,24 +8,24 @@ spring:
           github:
             client-id: Ov23liEECDiHrq5PIBog
             client-secret: 01ff35485e88a48827638821114006c533ec47eb
-          taco-admin-client:
-            provider: tacocloud
-            client-id: taco-admin-client
-            client-secret: secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
-            scope: writeIngredients,deleteIngredients,openid
-        provider:
-          tacocloud:
-            issuer-uri: http://localhost:9000
-            authorization-uri: http://localhost:9000/oauth2/authorize
-            token-uri: http://localhost:9000/oauth2/token
-            jwk-set-uri: http://localhost:9000/oauth2/jwks
-            user-info-uri: http://localhost:9000/userinfo
-            user-name-attribute: sub
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://localhost:9000/oauth2/jwks
+#          taco-admin-client:
+#            provider: tacocloud
+#            client-id: taco-admin-client
+#            client-secret: secret
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+#            scope: writeIngredients,deleteIngredients,openid
+#        provider:
+#          tacocloud:
+#            issuer-uri: http://localhost:9000
+#            authorization-uri: http://localhost:9000/oauth2/authorize
+#            token-uri: http://localhost:9000/oauth2/token
+#            jwk-set-uri: http://localhost:9000/oauth2/jwks
+#            user-info-uri: http://localhost:9000/userinfo
+#            user-name-attribute: sub
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: http://localhost:9000/oauth2/jwks
   datasource:
     url: jdbc:h2:mem:tacocloud
     driver-class-name: org.h2.Driver
@@ -39,3 +39,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+# Email Integration Configuration for Order Creation
+taco:
+  email:
+    imap:
+      host: imap.qq.com
+      port: 993
+      username: example@qq.com
+      password: example
+      poll-interval: 60000
+      protocol: imaps
+      folder: INBOX
+      delete-after-processing: false
